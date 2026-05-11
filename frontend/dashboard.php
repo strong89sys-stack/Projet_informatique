@@ -2,18 +2,19 @@
     session_start();
     require '../backend/config.php';
 
-    if (!isset($_SESSION['admin_id'])){
+    if (!isset($_COOKIE['admin_name'])){
         header("location:admin-login.php");
         exit();
     }
-
-    $stmt = $conn->prepare("
-        SELECT COUNT(*)
-        FROM intervention
-        WHERE idVeh <> NULL;
-    ");
-    $stmt->execute();
-    $interventionsCount = $stmt->fetchColumn();
+    else{
+        $stmt = $conn->prepare("
+            SELECT COUNT(*)
+            FROM intervention
+            WHERE idVeh <> NULL;
+        ");
+        $stmt->execute();
+        $interventionsCount = $stmt->fetchColumn();
+    }
 
 ?>
 
@@ -153,7 +154,7 @@
                             <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
                         </div>
                     </div>
-                    <div class="kpi-value">3</div>
+                    <div class="kpi-value"><?= $interventionsCount ?></div>
                     <div class="kpi-info">&#10003; Toutes résolues</div>
                 </div>
 
