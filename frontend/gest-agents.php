@@ -238,7 +238,7 @@
                                             <tr>
                                                 <td>
                                                     <div class='agent-cell'>
-                                                        <div class='agent-avatar' style='background:#2a3f6f;'>JA</div>
+                                                        <div class='agent-avatar' style='background:#2a3f6f;'>".substr($agent['prenomAge'], 0, 1)."".substr($agent['nomAge'], 0, 1)."</div>
                                                         <div class='agent-info'>
                                                             <span class='agent-name'>" . htmlspecialchars($agent['prenomAge'], ENT_QUOTES, 'UTF-8')." ".htmlspecialchars($agent['nomAge'], ENT_QUOTES, 'UTF-8')."</span>
                                                             <span class='agent-email'>".htmlspecialchars($agent['contAge'], ENT_QUOTES, 'UTF-8')."</span>
