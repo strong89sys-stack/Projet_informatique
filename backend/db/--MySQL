@@ -1,0 +1,138 @@
+DROP TABLE IF EXISTS marque;
+DROP TABLE IF EXISTS categorie;
+DROP TABLE IF EXISTS vehicule;
+DROP TABLE IF EXISTS type_service;
+DROP TABLE IF EXISTS service;
+DROP TABLE IF EXISTS agent;
+DROP TABLE IF EXISTS intervention;
+DROP TABLE IF EXISTS nature_paiement;
+DROP TABLE IF EXISTS guichet;
+DROP TABLE IF EXISTS paiement;
+DROP TABLE IF EXISTS camera;
+DROP TABLE IF EXISTS admin;
+
+
+/* ------------- CREATION DES TABLES -------------- */
+CREATE TABLE IF NOT EXISTS marque(
+	idMarq INTEGER PRIMARY KEY AUTO_INCREMENT,
+    libMarq VARCHAR(15) NOT NULL
+) ENGINE=INNODB;
+
+CREATE TABLE IF NOT EXISTS categorie(
+	idCat INTEGER PRIMARY KEY AUTO_INCREMENT,
+    libCat VARCHAR(15) NOT NULL,
+    poidsMoyCat VARCHAR(10) NOT NULL
+) ENGINE=INNODB;
+
+CREATE TABLE IF NOT EXISTS vehicule (
+    idVeh INTEGER PRIMARY KEY AUTO_INCREMENT,
+	immatVeh VARCHAR(10) UNIQUE NOT NULL,
+    idMarq INTEGER NOT NULL,
+    idCat INTEGER NOT NULL,
+    FOREIGN KEY (idMarq) REFERENCES marque (idMarq) ON DELETE CASCADE,
+    FOREIGN KEY (idCat) REFERENCES categorie (idCat) ON DELETE CASCADE
+) ENGINE=INNODB;
+
+CREATE TABLE IF NOT EXISTS type_service(
+	idTypServ INTEGER PRIMARY KEY AUTO_INCREMENT,
+    libTypServ VARCHAR(15) NOT NULL
+) ENGINE=INNODB;
+
+CREATE TABLE IF NOT EXISTS service(
+	idServ INTEGER PRIMARY KEY AUTO_INCREMENT,
+    libServ VARCHAR(15) NOT NULL,
+    idTypServ INTEGER NOT NULL,
+    FOREIGN KEY (idTypServ) REFERENCES type_service (idTypServ) ON DELETE CASCADE
+) ENGINE=INNODB;
+
+CREATE TABLE IF NOT EXISTS agent(
+	idAge INTEGER PRIMARY KEY AUTO_INCREMENT,
+	numAge VARCHAR(6) NOT NULL UNIQUE,
+    nomAge VARCHAR(30) NOT NULL,
+    prenomAge VARCHAR(50) NOT NULL,
+    dtnaisAge DATE NOT NULL,
+    adressAge VARCHAR(100) NOT NULL,
+    contAge VARCHAR(20) NOT NULL,
+    sexAge CHAR(1) NOT NULL,
+    idServ INTEGER NOT NULL,
+    FOREIGN KEY (idServ) REFERENCES service (idServ) ON DELETE CASCADE
+) ENGINE=INNODB;
+
+CREATE TABLE IF NOT EXISTS intervention(
+	idInterv INTEGER PRIMARY KEY AUTO_INCREMENT,
+    dtInterv DATETIME NOT NULL,
+    libInterv TEXT,
+    idAge INTEGER NOT NULL,
+    idServ INTEGER NOT NULL,
+    idVeh INTEGER NOT NULL,
+    FOREIGN KEY (idAge) REFERENCES agent (idAge) ON DELETE CASCADE,
+    FOREIGN KEY (idServ) REFERENCES service (idServ) ON DELETE CASCADE,
+    FOREIGN KEY (idVeh) REFERENCES vehicule (idVeh) ON DELETE CASCADE
+) ENGINE=INNODB;
+
+CREATE TABLE IF NOT EXISTS nature_paiement(
+	idNatPaie INTEGER PRIMARY KEY AUTO_INCREMENT,
+    libNatPaie VARCHAR(10) NOT NULL
+) ENGINE=INNODB;
+
+CREATE TABLE IF NOT EXISTS guichet(
+	idGui INTEGER PRIMARY KEY AUTO_INCREMENT,
+    libGui VARCHAR(15) NOT NULL
+) ENGINE=INNODB;
+
+CREATE TABLE IF NOT EXISTS paiement(
+	idPaie INTEGER PRIMARY KEY AUTO_INCREMENT,
+    dtPaie DATETIME NOT NULL,
+    mtPaie DECIMAL(10,2) NOT NULL,
+    idNatPaie INTEGER NOT NULL,
+    idVeh INTEGER NOT NULL,
+    idGui INTEGER NOT NULL,
+    FOREIGN KEY (idNatPaie) REFERENCES nature_paiement (idNatPaie) ON DELETE CASCADE,
+    FOREIGN KEY (idVeh) REFERENCES vehicule (idVeh) ON DELETE CASCADE,
+    FOREIGN KEY (idGui) REFERENCES guichet (idGui) ON DELETE CASCADE
+) ENGINE=INNODB;
+
+CREATE TABLE IF NOT EXISTS camera(
+	idCam INTEGER PRIMARY KEY AUTO_INCREMENT,
+    libCam VARCHAR(30) NOT NULL,
+    idGui INTEGER NOT NULL,
+    FOREIGN KEY (idGui) REFERENCES guichet (idGui) ON DELETE CASCADE
+) ENGINE=INNODB;
+
+CREATE TABLE IF NOT EXISTS admin(
+    idAdmin INTEGER PRIMARY KEY AUTO_INCREMENT,
+    nomAdmin VARCHAR(30) NOT NULL,
+    prenomAdmin VARCHAR(50) NOT NULL,
+    codeAdmin VARCHAR(255) NOT NULL UNIQUE
+) ENGINE=INNODB;
+
+/* -------- ALTER -------- */
+ALTER TABLE intervention
+ADD COLUMN idGui INT NOT NULL;
+
+ALTER TABLE intervention
+ADD FOREIGN KEY (idGui) REFERENCES guichet(idGui) ON DELETE CASCADE;
+
+/*------------- INSERT ----------------*/
+INSERT INTO admin (nomAdmin, prenomAdmin, codeAdmin) VALUES
+("Kabore", "Aziz", "4c68cea7e58591b579fd074bcdaff740");
+
+INSERT INTO marque(libMarq) VALUES
+('Toyota'),
+('Mercedes-Benz'),
+('Renault/Dacia'),
+('Kia'),
+('Nissan'),
+('Hyundai'),
+('Suzuki'),
+('Jetour'),
+('Changan'),
+('BYD'),
+('GMC'),
+('Autre')
+
+INSERT INTO categorie(libCat, poidsMoyCat) VALUES
+('Classe 1 (Léger)', "0,5 à 1,5 tonnes"),
+('Classe 2 (Intermédiaire)', '1,5 à 3,5 tonnes'),
+('Classe 3 (Poids lourds 2 essieux)', '3,5 à 12 tonnes'),
+('Classe 4 (Poids lourds 3+ essieux)', '12 à 40 tonnes')

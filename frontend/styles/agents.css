@@ -1,0 +1,533 @@
+/* ============================================================
+   AGENTS.CSS — Page Gestion des Agents
+   S'appuie sur dashboard.css pour les variables et composants communs
+   ============================================================ */
+
+/* ---- Topbar étendu (search bar + rôle admin) ---- */
+.topbar {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 24px;
+}
+
+.topbar-center { display: flex; justify-content: center; }
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    width: 280px;
+}
+
+.search-bar svg {
+    width: 15px; height: 15px;
+    stroke: var(--text-muted);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    flex-shrink: 0;
+}
+
+.search-bar input {
+    border: none;
+    background: none;
+    outline: none;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--text);
+    width: 100%;
+}
+
+.search-bar input::placeholder { color: var(--text-muted); }
+
+/* Notif dot */
+.notif-btn { position: relative; }
+.notif-dot {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 8px; height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    border: 2px solid var(--surface);
+}
+
+/* Admin avec rôle */
+.admin-profile--topbar {
+    background: none;
+    border: none;
+    padding: 0;
+    gap: 10px;
+}
+
+.admin-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.admin-role {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    font-weight: 500;
+}
+
+/* ---- Breadcrumb ---- */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.breadcrumb svg {
+    width: 12px; height: 12px;
+    stroke: var(--text-muted);
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+}
+
+.breadcrumb-active { color: var(--accent); }
+
+/* ---- Page header ---- */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 4px;
+}
+
+.page-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.search-bar--page {
+    width: 320px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+}
+
+.btn-ajouter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 9px;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
+}
+
+.btn-ajouter svg {
+    width: 16px; height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.btn-ajouter:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(30,58,138,0.25);
+}
+
+/* ---- Agents body layout ---- */
+.agents-body {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+/* ---- Filters Panel ---- */
+.filters-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    animation: fadeUp 0.3s ease both;
+}
+
+.filters-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filters-title {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.btn-reinit {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--accent);
+    padding: 3px 8px;
+    border-radius: 5px;
+    transition: background 0.15s;
+}
+.btn-reinit:hover { background: #eff3ff; }
+
+.filter-group { display: flex; flex-direction: column; gap: 8px; }
+
+.filter-label {
+    font-family: var(--font-head);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* Select */
+.select-wrap {
+    position: relative;
+}
+
+.select-wrap select {
+    width: 100%;
+    appearance: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 32px 9px 12px;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    color: var(--text);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.select-wrap select:focus { border-color: var(--accent-light); }
+
+.select-wrap svg {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px; height: 14px;
+    stroke: var(--text-muted);
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    pointer-events: none;
+}
+
+/* Checkboxes */
+.checkbox-list { display: flex; flex-direction: column; gap: 10px; }
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.83rem;
+    color: var(--text);
+    cursor: pointer;
+    position: relative;
+}
+
+.checkbox-item input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0; height: 0;
+}
+
+.checkmark {
+    width: 17px; height: 17px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.checkbox-item input:checked ~ .checkmark {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.checkbox-item input:checked ~ .checkmark::after {
+    content: '';
+    width: 4px; height: 7px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translateY(-1px);
+    display: block;
+}
+
+/* Stats card */
+.stats-card {
+    background: var(--accent);
+    border-radius: 10px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stats-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.stats-value {
+    font-family: var(--font-head);
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    margin-top: 4px;
+}
+
+.stats-trend {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.8);
+    margin-top: 6px;
+    font-weight: 500;
+}
+
+/* ---- Agents Table ---- */
+.agents-table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    animation: fadeUp 0.35s ease both 0.05s;
+}
+
+.agents-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.agents-table thead th {
+    background: var(--bg);
+    text-align: left;
+    padding: 12px 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.agents-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.12s;
+}
+
+.agents-table tbody tr:last-child { border-bottom: none; }
+.agents-table tbody tr:hover { background: #f7f9ff; }
+
+.agents-table tbody td {
+    padding: 16px 20px;
+    font-size: 0.85rem;
+    color: var(--text);
+    vertical-align: middle;
+}
+
+/* Agent cell */
+.agent-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.agent-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-family: var(--font-head);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+}
+
+.agent-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.agent-name {
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 0.875rem;
+}
+
+.agent-email {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.matricule {
+    font-family: var(--font-head);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--text);
+}
+
+/* Status badges */
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.badge-actif       { background: #dcfce7; color: #15803d; }
+.badge-hors        { background: #f1f5f9; color: #aa4949; }
+.badge-intervention { background: #fef9c3; color: #b45309; }
+
+/* Actions */
+.actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.action-btn {
+    width: 34px; height: 34px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.action-btn svg {
+    width: 14px; height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.action-btn:hover {
+    background: var(--bg);
+    color: var(--accent);
+    border-color: var(--accent-light);
+}
+
+.action-btn--delete:hover {
+    color: #ef4444;
+    border-color: #fca5a5;
+    background: #fff1f1;
+}
+
+/* ---- Pagination ---- */
+.pagination-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+}
+
+.pagination-info {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.page-btn {
+    width: 34px; height: 34px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    transition: background 0.15s, color 0.15s;
+}
+
+.page-btn svg {
+    width: 14px; height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+}
+
+.page-btn:hover:not(:disabled):not(.page-btn--active) {
+    background: var(--bg);
+    border-color: var(--accent-light);
+    color: var(--accent);
+}
+
+.page-btn--active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.page-btn--arrow { border-color: transparent; background: none; }
+.page-btn--arrow:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+    .agents-body { grid-template-columns: 1fr; }
+    .filters-panel { flex-direction: row; flex-wrap: wrap; }
+    .topbar { grid-template-columns: auto auto; }
+    .topbar-center { display: none; }
+}
