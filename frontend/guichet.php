@@ -28,6 +28,18 @@
         if (empty($immat) || empty($marque) || empty($category) || empty($date) || empty($payment_mode)) {
             $message = 'Veuillez remplir tous les champs obligatoires.';
         } else {
+            if ($category === 'Classe 1 (Léger)') {
+                $amount = 500;
+            } elseif ($category === 'Classe 2 (Intermédiaire)') {
+                $amount = 1000;
+            } elseif ($category === 'Classe 3 (Poids lourds 2 essieux)') {
+                $amount = 1500;
+            } elseif ($category === 'Classe 4 (Poids lourds 3+ essieux)') {
+                $amount = 3000;
+            } else {
+                $message = 'Catégorie de véhicule invalide.';
+            }
+
             $stmt = $conn->prepare("SELECT * FROM marque WHERE libMarq = :marque LIMIT 1");
             $stmt->bindParam(':marque', $marque, PDO::PARAM_STR);
             $stmt->execute();
@@ -75,25 +87,22 @@
                         } elseif (empty($vehiculeId)) {
                             $message = 'Impossible de retrouver l’identifiant du véhicule.';
                         } else {
+                            $stmt = $conn->prepare("INSERT INTO paiement (dtPaie, mtPaie, idNatPaie, idVeh, idAge, idServ) VALUES (:dtPaie, :mtPaie, :idNatPaie, :idVeh, :idAge, :idServ)");
+                            $stmt->bindParam(':dtPaie', $date, PDO::PARAM_STR);
+                            $stmt->bindParam(':mtPaie', $amount, PDO::PARAM_INT);
+                            $stmt->bindParam(':idNatPaie', $natPaie['idNatPaie'], PDO::PARAM_INT);
+                            $stmt->bindParam(':idVeh', $vehiculeId, PDO::PARAM_INT);
+                            $stmt->bindParam(':idAge', $_SESSION['idAge'], PDO::PARAM_INT);
+                            $stmt->bindParam(':idServ', $_SESSION['idServ'], PDO::PARAM_INT);
                             
-                            $stmt = $conn->prepare("
-                                SELECT *
-                                FROM guichet
-                                WHERE libGui = :libGui
-                                LIMIT 1;
-                            ");
-                            $stmt->bindParam(':libGui', $_SESSION['libGui'], PDO::PARAM_STR);
-                            $stmt->execute();
-
-                            $res1 = $stmt->fetch(PDO::FETCH_ASSOC);
-                            if ($res1){
+                            if ($stmt->execute()) {
 
                                 $stmt = $conn->prepare("INSERT INTO intervention (dtInterv, libInterv, idAge, idServ, idveh, idGui) VALUES (:dtInterv, 'Encaissement', :idAge, :idServ, :idVeh, :idGui)");
                                 $stmt->bindParam(':dtInterv', $date, PDO::PARAM_STR);
                                 $stmt->bindParam(':idAge', $_SESSION['idAge'], PDO::PARAM_INT);
                                 $stmt->bindParam(':idServ', $_SESSION['idServ'], PDO::PARAM_INT);
                                 $stmt->bindParam(':idVeh', $vehiculeId, PDO::PARAM_INT);
-                                $stmt->bindParam(':idGui', $res1['idGui'], PDO::PARAM_INT);
+                                $stmt->bindParam(':idGui', $_SESSION['idGui'], PDO::PARAM_INT);
 
                                 if ($stmt->execute()) {
                                     $message = 'Encaissement enregistré avec succès.';
