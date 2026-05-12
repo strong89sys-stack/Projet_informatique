@@ -2,7 +2,7 @@
     session_start();
     require '../backend/config.php';
 
-    if (!isset($_SESSION['admin_id'])) {
+    if (!isset($_COOKIE['admin_name'])) {
         header("Location: admin-login.php");
         exit();
     }
