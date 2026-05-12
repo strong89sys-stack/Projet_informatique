@@ -70,7 +70,11 @@
                         if (!$stmt->execute()) {
                             $message = 'Impossible d’enregistrer le véhicule.';
                         } else {
-                            $vehiculeId = $conn->lastInsertId();
+                            $stmt = $conn->prepare("SELECT * FROM vehicule WHERE immatVeh = :immatVeh LIMIT 1");
+                            $stmt->bindParam(':immatVeh', $immat, PDO::PARAM_STR);
+                            $stmt->execute();
+                            $vehicule_res = $stmt->fetch(PDO::FETCH_ASSOC);
+                            $vehiculeId = $vehicule_res['idVeh'];
                         }
                     } else {
                         $vehiculeId = $vehicule['idVeh'];
@@ -87,18 +91,18 @@
                         } elseif (empty($vehiculeId)) {
                             $message = 'Impossible de retrouver l’identifiant du véhicule.';
                         } else {
-                            $stmt = $conn->prepare("INSERT INTO paiement (dtPaie, mtPaie, idNatPaie, idVeh, idAge, idServ) VALUES (:dtPaie, :mtPaie, :idNatPaie, :idVeh, :idAge, :idServ)");
+                            $stmt = $conn->prepare("INSERT INTO paiement (dtPaie, mtPaie, idNatPaie, idVeh, idGui) VALUES (:dtPaie, :mtPaie, :idNatPaie, :idVeh, :idGui)");
                             $stmt->bindParam(':dtPaie', $date, PDO::PARAM_STR);
                             $stmt->bindParam(':mtPaie', $amount, PDO::PARAM_INT);
                             $stmt->bindParam(':idNatPaie', $natPaie['idNatPaie'], PDO::PARAM_INT);
                             $stmt->bindParam(':idVeh', $vehiculeId, PDO::PARAM_INT);
-                            $stmt->bindParam(':idAge', $_SESSION['idAge'], PDO::PARAM_INT);
-                            $stmt->bindParam(':idServ', $_SESSION['idServ'], PDO::PARAM_INT);
+                            $stmt->bindParam(':idGui', $_SESSION['idGui'], PDO::PARAM_INT);
                             
                             if ($stmt->execute()) {
-
-                                $stmt = $conn->prepare("INSERT INTO intervention (dtInterv, libInterv, idAge, idServ, idveh, idGui) VALUES (:dtInterv, 'Encaissement', :idAge, :idServ, :idVeh, :idGui)");
+                                $dte = date('Y-m-d', time());
+                                $stmt = $conn->prepare("INSERT INTO intervention (dtInterv, libInterv, dte, idAge, idServ, idveh, idGui) VALUES (:dtInterv, 'Encaissement', :dte, :idAge, :idServ, :idVeh, :idGui)");
                                 $stmt->bindParam(':dtInterv', $date, PDO::PARAM_STR);
+                                $stmt->bindParam(':dte', $dte, PDO::PARAM_STR);
                                 $stmt->bindParam(':idAge', $_SESSION['idAge'], PDO::PARAM_INT);
                                 $stmt->bindParam(':idServ', $_SESSION['idServ'], PDO::PARAM_INT);
                                 $stmt->bindParam(':idVeh', $vehiculeId, PDO::PARAM_INT);
@@ -158,22 +162,15 @@
 
         <div class="main">
             <div class="left">
-                <div class="message">
-                    <div>
-                        <p><span>&check;</span> Encaissement réussie</p>
-                        <button id="close_btn">x</button>
-                        <?php if (!empty($message)){
-                            echo "<div class='message'>
-                                <div>
-                                    <p><span>&check;</span> Encaissement réussie</p>
-                                    <button id='close_btn'>x</button>
-                                    '<p>$message</p>';
-                                </div>
-                            </div>";
-                        }
-                        ?>
-                    </div>
-                </div>
+                <?php if (!empty($message)){
+                    echo "<div class='message'>
+                        <div>
+                            <p><span>&check;</span> $message</p>
+                            <button id='close_btn'>x</button>
+                        </div>
+                    </div>";
+                }
+                ?>
                 <div class="box">
                     <form method="post">
                         <!-- Vehicle Plate -->

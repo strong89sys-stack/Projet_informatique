@@ -79,7 +79,6 @@ body{
 .message{
     background: rgba(37, 133, 72, .2);
     border-radius: 12px;
-    display: none;
 }
 .message div{
     display: flex;
