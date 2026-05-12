@@ -307,3 +307,9 @@ button:hover{
     height: 100%;
     border-radius: 10px;
 }
+canvas{
+    display: none;
+}
+#capture{
+    display: none;
+}

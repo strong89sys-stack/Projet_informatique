@@ -6,12 +6,12 @@
     $marque = $_POST['marque'] ?? null;
     $category = $_POST['category'] ?? null;
     $date = $_POST['date'] ?? null;
-    $amount = $_POST['amount'] ?? null;
     $payment_mode = $_POST['payment-mode'] ?? null;
     $txt_arrea = $_POST['message'] ?? null;
     $valider = $_POST['valider'] ?? null;
 
     $message = null;
+    $amount = null;
 
     if ($_SESSION["state"] != "connecté") {
         header("location:guichet-login.html");
@@ -22,6 +22,19 @@
         session_destroy();
         header("location:index.html");
         exit();
+    }
+
+    $stmt = $conn->prepare("select count(idPaie) from paiement where idGui = :idGui");
+    $stmt->bindParam(':idGui', $_SESSION['idGui'], PDO::PARAM_INT);
+    $stmt->execute();
+    $res_paie = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $stmt = $conn->prepare("select sum(mtPaie) from paiement where idGui = :idGui");
+    $stmt->bindParam(":idGui", $_SESSION['idGui'], PDO::PARAM_INT);
+    $stmt->execute();
+    $res_mt = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$res_mt){
+        $res_mt = [0];
     }
 
     if (isset($valider)) {
@@ -36,8 +49,6 @@
                 $amount = 1500;
             } elseif ($category === 'Classe 4 (Poids lourds 3+ essieux)') {
                 $amount = 3000;
-            } else {
-                $message = 'Catégorie de véhicule invalide.';
             }
 
             $stmt = $conn->prepare("SELECT * FROM marque WHERE libMarq = :marque LIMIT 1");
@@ -45,17 +56,13 @@
             $stmt->execute();
             $res = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if (!$res) {
-                $message = 'Marque invalide.';
-            } else {
+            if ($res) {
                 $stmt = $conn->prepare("SELECT * FROM categorie WHERE libCat = :category LIMIT 1");
                 $stmt->bindParam(':category', $category, PDO::PARAM_STR);
                 $stmt->execute();
                 $res1 = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                if (!$res1) {
-                    $message = 'Catégorie invalide.';
-                } else {
+                if ($res1) {
                     $stmt = $conn->prepare("SELECT * FROM vehicule WHERE immatVeh = :immatVeh LIMIT 1");
                     $stmt->bindParam(':immatVeh', $immat, PDO::PARAM_STR);
                     $stmt->execute();
@@ -67,29 +74,28 @@
                         $stmt->bindParam(':idMarq', $res['idMarq'], PDO::PARAM_INT);
                         $stmt->bindParam(':idCat', $res1['idCat'], PDO::PARAM_INT);
 
-                        if (!$stmt->execute()) {
-                            $message = 'Impossible d’enregistrer le véhicule.';
-                        } else {
+                        if ($stmt->execute()) {
                             $stmt = $conn->prepare("SELECT * FROM vehicule WHERE immatVeh = :immatVeh LIMIT 1");
                             $stmt->bindParam(':immatVeh', $immat, PDO::PARAM_STR);
                             $stmt->execute();
                             $vehicule_res = $stmt->fetch(PDO::FETCH_ASSOC);
                             $vehiculeId = $vehicule_res['idVeh'];
+                        } else {
+                            $message = 'Erreur lors de l\'insertion du véhicule.';
+                            $vehiculeId = null;
                         }
                     } else {
                         $vehiculeId = $vehicule['idVeh'];
                     }
 
-                    if (empty($message)) {
+                    if ($vehiculeId) {
                         $stmt = $conn->prepare("SELECT * FROM nature_paiement WHERE libNatPaie = :payment_mode LIMIT 1");
                         $stmt->bindParam(':payment_mode', $payment_mode, PDO::PARAM_STR);
                         $stmt->execute();
                         $natPaie = $stmt->fetch(PDO::FETCH_ASSOC);
 
                         if (!$natPaie) {
-                            $message = 'Mode de paiement invalide.';
-                        } elseif (empty($vehiculeId)) {
-                            $message = 'Impossible de retrouver l’identifiant du véhicule.';
+                            $message = 'Mode de paiement non trouvé.';
                         } else {
                             $stmt = $conn->prepare("INSERT INTO paiement (dtPaie, mtPaie, idNatPaie, idVeh, idGui) VALUES (:dtPaie, :mtPaie, :idNatPaie, :idVeh, :idGui)");
                             $stmt->bindParam(':dtPaie', $date, PDO::PARAM_STR);
@@ -100,7 +106,7 @@
                             
                             if ($stmt->execute()) {
                                 $dte = date('Y-m-d', time());
-                                $stmt = $conn->prepare("INSERT INTO intervention (dtInterv, libInterv, dte, idAge, idServ, idveh, idGui) VALUES (:dtInterv, 'Encaissement', :dte, :idAge, :idServ, :idVeh, :idGui)");
+                                $stmt = $conn->prepare("INSERT INTO intervention (dtInterv, libInterv, dte, idAge, idServ, idVeh, idGui) VALUES (:dtInterv, 'Encaissement', :dte, :idAge, :idServ, :idVeh, :idGui)");
                                 $stmt->bindParam(':dtInterv', $date, PDO::PARAM_STR);
                                 $stmt->bindParam(':dte', $dte, PDO::PARAM_STR);
                                 $stmt->bindParam(':idAge', $_SESSION['idAge'], PDO::PARAM_INT);
@@ -111,8 +117,10 @@
                                 if ($stmt->execute()) {
                                     $message = 'Encaissement enregistré avec succès.';
                                 } else {
-                                    $message = 'Impossible d’enregistrer l’intervention.';
+                                    $message = 'Impossible d\'enregistrer l\'intervention.';
                                 }
+                            } else {
+                                $message = 'Erreur lors de l\'insertion du paiement.';
                             }
                         }
                     }
@@ -120,6 +128,7 @@
             }
         }
     }
+
     if(@$_GET['disconnected'] == true){
         $stmt = $conn->prepare("UPDATE agent
             SET statutAge = null
@@ -234,8 +243,7 @@
                             <label>Montant à payer</label>
                             <div class="amount-box">
                                 <span>FCFA</span>
-                                <input name="amount" class="amount" id="amount" placeholder="0" type="text" disabled="true"/>
-                                <input type="hidden" name="amount" id="amount-hidden" value="">
+                                <input class="amount" id="amount" placeholder="0" type="text" disabled="true"/>
                             </div>
                         </div>
 
@@ -305,11 +313,15 @@
                     <div class="content">
                         <div class="txt">
                             <p>Passages</p>
-                            <p>142</p>
+                            <?php
+                                echo "<p>".implode($res_paie)."</p>";
+                            ?>
                         </div>
                         <div class="txt">
                             <p>Total (FCFA)</p>
-                            <p>355K</p>
+                            <?php
+                                echo "<p>".implode($res_mt)."</p>";
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -335,30 +347,18 @@
     
     <script>
         const amount = document.getElementById('amount');
-        const amountHidden = document.getElementById('amount-hidden');
         const select = document.getElementById('category');
 
         function updateAmount(value) {
             let prix = '';
-
-            if (value === 'Classe 1 (Léger)') {
-                prix = 500;
-            } else if (value === 'Classe 2 (Intermédiaire)') {
-                prix = 1000;
-            } else if (value === 'Classe 3 (Poids lourds 2 essieux)') {
-                prix = 1500;
-            } else if (value === 'Classe 4 (Poids lourds 3+ essieux)') {
-                prix = 3000;
-            }
-
+            if (value === 'Classe 1 (Léger)') prix = 500;
+            else if (value === 'Classe 2 (Intermédiaire)') prix = 1000;
+            else if (value === 'Classe 3 (Poids lourds 2 essieux)') prix = 1500;
+            else if (value === 'Classe 4 (Poids lourds 3+ essieux)') prix = 3000;
             amount.value = prix;
-            amountHidden.value = prix;
         }
 
-        select.addEventListener('change', () => {
-            updateAmount(select.value);
-        });
-
+        select.addEventListener('change', () => updateAmount(select.value));
         updateAmount(select.value);
     </script>
     <script>

@@ -92,13 +92,13 @@
             <div class="kpi-grid">
                 <div class="kpi-card">
                     <span class="kpi-label">Total Collecté</span>
-                    <div class="kpi-value">145 280,00 €</div>
+                    <div class="kpi-value">145 280 000 </div>
                     <div class="kpi-trend up">↗ +12.5%</div>
                 </div>
                 <div class="kpi-card">
                     <span class="kpi-label">Transactions</span>
                     <div class="kpi-value">8 432</div>
-                    <div class="kpi-info">Moyenne : 17.22 €</div>
+                    <div class="kpi-info">Moyenne : 17 000</div>
                 </div>
                 <div class="kpi-card">
                     <span class="kpi-label">Paiements Tag</span>
@@ -189,11 +189,11 @@
 
 <script>
 const transactions = [
-    { id: '#TXN-88219', date: '24/10/2023', heure: '14:32:01', gare: 'A1 North', voie: 'Voie 03', methode: 'Tag',     categorie: 'Classe 1 (VL)',   montant: '12.50 €', statut: 'validé' },
-    { id: '#TXN-88218', date: '24/10/2023', heure: '14:28:45', gare: 'A1 North', voie: 'Voie 05', methode: 'Carte',   categorie: 'Classe 3 (PL)',   montant: '34.20 €', statut: 'validé' },
-    { id: '#TXN-88217', date: '24/10/2023', heure: '14:15:10', gare: 'A4 East',  voie: 'Voie 12', methode: 'Espèces', categorie: 'Classe 1 (VL)',   montant: '8.90 €',  statut: 'echec' },
-    { id: '#TXN-88216', date: '24/10/2023', heure: '14:02:55', gare: 'A1 North', voie: 'Voie 03', methode: 'Tag',     categorie: 'Classe 1 (VL)',   montant: '12.50 €', statut: 'validé' },
-    { id: '#TXN-88215', date: '24/10/2023', heure: '13:55:20', gare: 'A1 North', voie: 'Voie 01', methode: 'Carte',   categorie: 'Classe 2 (Inter)', montant: '18.10 €', statut: 'attente' },
+    { id: '#TXN-88219', date: '24/10/2026', heure: '14:32:01', gare: 'Guichet A', voie: 'Voie 03', methode: 'badge',     categorie: 'Classe 1 (VL)',   montant: '500', statut: 'validé' },
+    { id: '#TXN-88218', date: '24/10/2026', heure: '14:28:45', gare: 'Guichet B', voie: 'Voie 05', methode: 'badge',   categorie: 'Classe 3 (PL)',   montant: '1500', statut: 'validé' },
+    { id: '#TXN-88217', date: '24/10/2026', heure: '14:15:10', gare: 'Guichet C',  voie: 'Voie 12', methode: 'Espèces', categorie: 'Classe 1 (VL)',   montant: '500',  statut: 'echec' },
+    { id: '#TXN-88216', date: '24/10/2026', heure: '14:02:55', gare: 'Guichet A', voie: 'Voie 03', methode: 'Mobile Money',     categorie: 'Classe 4 (VL)',   montant: '3000', statut: 'validé' },
+    { id: '#TXN-88215', date: '24/10/2026', heure: '13:55:20', gare: 'Guichet A', voie: 'Voie 01', methode: 'Carte',   categorie: 'Classe 2 (Inter)', montant: '500', statut: 'validé' },
 ];
 
 const statutMap = {
