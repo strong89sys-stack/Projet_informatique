@@ -1,3 +1,12 @@
+<?php
+    session_start();
+    require '../backend/config.php';
+
+    $stmt = $conn->prepare("SELECT * FROM guichet");
+    $stmt->execute();
+    $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -35,9 +44,11 @@
                 <label for="libGui">Guichet</label>
                 <select name="libGui" id="libGui">
                     <option value=""></option>
-                    <option value="Guichet A">Guichet A</option>
-                    <option value="Guichet B">Guichet B</option>
-                    <option value="Guichet C">Guichet C</option>
+                    <?php
+                        foreach($res as $guichet){
+                            echo "<option value='".$guichet['libGui']."'>".$guichet['libGui']."</option>";
+                        }
+                    ?>
                 </select>
             </div>
             <input type="submit" class="input" value="Soumettre" name="submit">

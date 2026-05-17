@@ -94,10 +94,10 @@
             <div class="topbar-right">
                 <div class="admin-profile">
                     <div class="admin-avatar">
-                        <?= substr($_SESSION['admin_name'], 0, 2) ?>
+                        <?= substr($_COOKIE['admin_name'], 0, 2) ?>
                     </div>
                     <span class="admin-name">
-                        <?= $_SESSION['admin_name'] ?>
+                        <?= $_COOKIE['admin_name'] ?>
                     </span>
                 </div>
                 <button class="icon-btn" title="Notifications">

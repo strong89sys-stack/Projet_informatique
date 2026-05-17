@@ -27,7 +27,11 @@
     foreach ($res1 as $interv){
         $intervention[$interv['numAge']] = $interv;
     }
-
+    
+    if(@$_SESSION['state'] == 'connecté'){
+        header("Location:gest-agents.php");
+        exit();
+    }
 ?>
 
 <!DOCTYPE html>
@@ -110,11 +114,11 @@
                 </button>
                 <div class="admin-profile admin-profile--topbar">
                     <div class="admin-avatar">
-                        <?= substr($_SESSION['admin_name'], 0, 2) ?>
+                        <?= substr($_COOKIE['admin_name'], 0, 2) ?>
                     </div>
                     <div class="admin-info">
                         <span class="admin-name">
-                            <?= $_SESSION['admin_name'] ?>
+                            <?= $_COOKIE['admin_name'] ?>
                         </span>
                     </div>
                 </div>
@@ -289,7 +293,7 @@
     <script>
         const btnAjouter = document.querySelector('.btn-ajouter');
         btnAjouter.addEventListener('click', () => {
-            window.location.href = 'agent.html';
+            window.location.href = 'agent.php';
         });
     </script>
 
