@@ -28,10 +28,10 @@
         $intervention[$interv['numAge']] = $interv;
     }
     
-    if(@$_SESSION['state'] == 'connecté'){
+    /*if(@$_SESSION['state'] == 'connecté'){
         header("Location:gest-agents.php");
         exit();
-    }
+    }*/
 ?>
 
 <!DOCTYPE html>
