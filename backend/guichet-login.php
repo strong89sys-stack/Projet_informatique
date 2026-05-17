@@ -42,8 +42,8 @@
                     }
 
                     $stmt = $conn->prepare("
-                        INSERT INTO intervention (dtInterv, libInterv, dte, idAge, idServ, idveh, idGui) VALUES
-                        (:dtInterv, 'Connexion Caisse', :dte, :idAge, :idServ, null, :idGui)
+                        INSERT INTO intervention (dtInterv, libInterv, dte, idAge, idveh, idGui) VALUES
+                        (:dtInterv, 'Connexion Caisse', :dte, :idAge, null, :idGui)
                     ");
 
                     $dtInterv = date("Y-m-d H:i:s", time());
@@ -52,7 +52,6 @@
                     $stmt->bindParam(':dtInterv', $dtInterv, PDO::PARAM_STR);
                     $stmt->bindParam(':dte', $date, PDO::PARAM_STR);
                     $stmt->bindParam(':idAge', $res['idAge'], PDO::PARAM_INT);
-                    $stmt->bindParam(':idServ', $res['idServ'], PDO::PARAM_INT);
                     $stmt->bindParam(':idGui', $res1['idGui'], PDO::PARAM_INT);
 
                     if ($stmt->execute()){

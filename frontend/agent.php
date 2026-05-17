@@ -1,3 +1,12 @@
+<?php
+    session_start();
+    require '../backend/config.php';
+
+    $stmt = $conn->prepare("SELECT * FROM service");
+    $stmt->execute();
+    $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -63,10 +72,11 @@
                 <label for="libServ">Service</label>
                 <select name="libServ" id="libServ">
                     <option value=""></option>
-                    <option value="Guichet">Guichet</option>
-                    <option value="Entretien">Entretien</option>
-                    <option value="Depannage">Depannage</option>
-                    <option value="Sécurité">Sécurité</option>
+                    <?php
+                        foreach($res as $serv){
+                            echo "<option value='".$serv['libServ']."'>".$serv['libServ']."</option>";
+                        }
+                    ?>
                 </select>
             </div>
             <input type="submit" class="input" name="submit" value="Soumettre">

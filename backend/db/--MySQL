@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS marque(
 CREATE TABLE IF NOT EXISTS categorie(
 	idCat INTEGER PRIMARY KEY AUTO_INCREMENT,
     libCat VARCHAR(15) NOT NULL,
-    poidsMoyCat VARCHAR(10) NOT NULL
+    poidsMoyCat VARCHAR(30) NOT NULL
 ) ENGINE=INNODB;
 
 CREATE TABLE IF NOT EXISTS vehicule (
@@ -33,16 +33,9 @@ CREATE TABLE IF NOT EXISTS vehicule (
     FOREIGN KEY (idCat) REFERENCES categorie (idCat) ON DELETE CASCADE
 ) ENGINE=INNODB;
 
-CREATE TABLE IF NOT EXISTS type_service(
-	idTypServ INTEGER PRIMARY KEY AUTO_INCREMENT,
-    libTypServ VARCHAR(15) NOT NULL
-) ENGINE=INNODB;
-
 CREATE TABLE IF NOT EXISTS service(
 	idServ INTEGER PRIMARY KEY AUTO_INCREMENT,
-    libServ VARCHAR(15) NOT NULL,
-    idTypServ INTEGER NOT NULL,
-    FOREIGN KEY (idTypServ) REFERENCES type_service (idTypServ) ON DELETE CASCADE
+    libServ VARCHAR(15) NOT NULL
 ) ENGINE=INNODB;
 
 CREATE TABLE IF NOT EXISTS agent(
@@ -54,6 +47,7 @@ CREATE TABLE IF NOT EXISTS agent(
     adressAge VARCHAR(100) NOT NULL,
     contAge VARCHAR(20) NOT NULL,
     sexAge CHAR(1) NOT NULL,
+    statutAge INTEGER DEFAULT NULL,
     idServ INTEGER NOT NULL,
     FOREIGN KEY (idServ) REFERENCES service (idServ) ON DELETE CASCADE
 ) ENGINE=INNODB;
@@ -63,10 +57,8 @@ CREATE TABLE IF NOT EXISTS intervention(
     dtInterv DATETIME NOT NULL,
     libInterv TEXT,
     idAge INTEGER NOT NULL,
-    idServ INTEGER NOT NULL,
-    idVeh INTEGER NOT NULL,
+    idVeh INTEGER DEFAULT NULL,
     FOREIGN KEY (idAge) REFERENCES agent (idAge) ON DELETE CASCADE,
-    FOREIGN KEY (idServ) REFERENCES service (idServ) ON DELETE CASCADE,
     FOREIGN KEY (idVeh) REFERENCES vehicule (idVeh) ON DELETE CASCADE
 ) ENGINE=INNODB;
 
@@ -77,7 +69,8 @@ CREATE TABLE IF NOT EXISTS nature_paiement(
 
 CREATE TABLE IF NOT EXISTS guichet(
 	idGui INTEGER PRIMARY KEY AUTO_INCREMENT,
-    libGui VARCHAR(15) NOT NULL
+    libGui VARCHAR(15) NOT NULL,
+    statutGui INTEGER DEFAULT NULL
 ) ENGINE=INNODB;
 
 CREATE TABLE IF NOT EXISTS paiement(
@@ -95,7 +88,7 @@ CREATE TABLE IF NOT EXISTS paiement(
 CREATE TABLE IF NOT EXISTS camera(
 	idCam INTEGER PRIMARY KEY AUTO_INCREMENT,
     libCam VARCHAR(30) NOT NULL,
-    idGui INTEGER NOT NULL,
+    idGui INTEGER NOT NULL UNIQUE,
     FOREIGN KEY (idGui) REFERENCES guichet (idGui) ON DELETE CASCADE
 ) ENGINE=INNODB;
 
@@ -114,9 +107,6 @@ ALTER TABLE intervention
 ADD FOREIGN KEY (idGui) REFERENCES guichet(idGui) ON DELETE CASCADE;
 
 /*------------- INSERT ----------------*/
-INSERT INTO admin (nomAdmin, prenomAdmin, codeAdmin) VALUES
-("Kabore", "Aziz", "4c68cea7e58591b579fd074bcdaff740");
-
 INSERT INTO marque(libMarq) VALUES
 ('Toyota'),
 ('Mercedes-Benz'),
@@ -129,10 +119,20 @@ INSERT INTO marque(libMarq) VALUES
 ('Changan'),
 ('BYD'),
 ('GMC'),
-('Autre')
+('Autre');
 
 INSERT INTO categorie(libCat, poidsMoyCat) VALUES
 ('Classe 1 (Léger)', "0,5 à 1,5 tonnes"),
 ('Classe 2 (Intermédiaire)', '1,5 à 3,5 tonnes'),
 ('Classe 3 (Poids lourds 2 essieux)', '3,5 à 12 tonnes'),
-('Classe 4 (Poids lourds 3+ essieux)', '12 à 40 tonnes')
+('Classe 4 (Poids lourds 3+ essieux)', '12 à 40 tonnes');
+
+INSERT INTO service (libServ) VALUES
+('CAISSE'),
+('DEPANNAGE'),
+('ENTRETIEN');
+
+INSERT INTO guichet (libGui, statutGui) VALUES
+('Guichet A', 0),
+('Guichet B', 0),
+('Guichet C', 0);

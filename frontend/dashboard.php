@@ -16,6 +16,18 @@
         $interventionsCount = $stmt->fetchColumn();
     }
 
+    $stmt = $conn->prepare("select sum(mtPaie) from paiement");
+    $stmt->execute();
+    $res_rec = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $stmt = $conn->prepare('select count(statutAge) from agent where statutAge = 1');
+    $stmt->execute();
+    $activeAge = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $stmt = $conn->prepare("select count(idVeh) from vehicule");
+    $stmt->execute();
+    $res_veh = $stmt->fetch(PDO::FETCH_ASSOC);
+
 ?>
 
 
@@ -82,10 +94,10 @@
             <div class="topbar-right">
                 <div class="admin-profile">
                     <div class="admin-avatar">
-                        <?= substr($_SESSION['admin_name'], 0, 2) ?>
+                        <?= substr($_COOKIE['admin_name'], 0, 2) ?>
                     </div>
                     <span class="admin-name">
-                        <?= $_SESSION['admin_name'] ?>
+                        <?= $_COOKIE['admin_name'] ?>
                     </span>
                 </div>
                 <button class="icon-btn" title="Notifications">
@@ -131,7 +143,7 @@
                             <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                         </div>
                     </div>
-                    <div class="kpi-value"><?= $interventionsCount ?></div>
+                    <div class="kpi-value"><?= implode($res_veh) ?></div>
                     <div class="kpi-trend kpi-trend--up">&#8599; +8.4% vs hier</div>
                 </div>
 
@@ -142,7 +154,9 @@
                             <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
                         </div>
                     </div>
-                    <div class="kpi-value">4,500,000</div>
+                    <div class="kpi-value">
+                        <?= implode($res_rec) ?>
+                    </div>
                     <div class="kpi-currency">CFA</div>
                     <div class="kpi-trend kpi-trend--up">&#8599; +12.1% ce mois</div>
                 </div>
@@ -165,7 +179,9 @@
                             <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
                         </div>
                     </div>
-                    <div class="kpi-value">12</div>
+                    <div class="kpi-value">
+                        <?= implode($activeAge) ?>
+                    </div>
                     <div class="kpi-info">&#10003; Équipe du matin</div>
                 </div>
             </div>

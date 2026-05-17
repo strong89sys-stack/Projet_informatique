@@ -8,11 +8,11 @@ admin_btn.addEventListener('click', () => {
 })
 
 agent_btn.addEventListener('click', () =>{
-    window.location.href = "../frontend/agent.html"
+    window.location.href = "../frontend/agent.php"
 })
 
 guichet_btn.addEventListener('click', () =>{
-    window.location.href = "../frontend/guichet-login.html"
+    window.location.href = "../frontend/guichet-login.php"
 })
 
 /*const cat1 = document.getElementById('Cat_1')
