@@ -106,11 +106,10 @@
                             
                             if ($stmt->execute()) {
                                 $dte = date('Y-m-d', time());
-                                $stmt = $conn->prepare("INSERT INTO intervention (dtInterv, libInterv, dte, idAge, idServ, idVeh, idGui) VALUES (:dtInterv, 'Encaissement', :dte, :idAge, :idServ, :idVeh, :idGui)");
+                                $stmt = $conn->prepare("INSERT INTO intervention (dtInterv, libInterv, dte, idAge, idVeh, idGui) VALUES (:dtInterv, 'Encaissement', :dte, :idAge, :idVeh, :idGui)");
                                 $stmt->bindParam(':dtInterv', $date, PDO::PARAM_STR);
                                 $stmt->bindParam(':dte', $dte, PDO::PARAM_STR);
                                 $stmt->bindParam(':idAge', $_SESSION['idAge'], PDO::PARAM_INT);
-                                $stmt->bindParam(':idServ', $_SESSION['idServ'], PDO::PARAM_INT);
                                 $stmt->bindParam(':idVeh', $vehiculeId, PDO::PARAM_INT);
                                 $stmt->bindParam(':idGui', $_SESSION['idGui'], PDO::PARAM_INT);
 

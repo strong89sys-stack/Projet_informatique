@@ -16,18 +16,43 @@
         $interventionsCount = $stmt->fetchColumn();
     }
 
+    /* Requête pour calculer les recettes totales */
     $stmt = $conn->prepare("select sum(mtPaie) from paiement");
     $stmt->execute();
     $res_rec = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    /* Requête pour compter les agents actifs */
     $stmt = $conn->prepare('select count(statutAge) from agent where statutAge = 1');
     $stmt->execute();
     $activeAge = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    /* Requête pour compter les véhicules */
     $stmt = $conn->prepare("select count(idVeh) from vehicule");
     $stmt->execute();
     $res_veh = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    /* Requête pour récupérer les interventions récentes */
+    /*$stmt = $conn->prepare("SELECT *
+        FROM intervention
+        WHERE idVeh IS NOT NULL
+        ORDER BY dtInterv DESC;    
+    ");
+    $stmt->execute();
+    $res_interv = $stmt->fetchAll(PDO::FETCH_ASSOC);*/
+
+    /* Requête pour récupérer l'immatriculation du véhicule dans les interventions récentes */
+    $stmt = $conn->prepare("SELECT i.dtInterv, v.immatVeh, c.libCat, p.mtPaie, g.libGui, a.nomAge, a.prenomAge
+        FROM intervention as i, vehicule as v, guichet as g, agent as a, categorie as c, paiement as p
+        WHERE i.idVeh = v.idVeh
+        AND i.idGui = g.idGui
+        AND i.idAge = a.idAge
+        AND v.idCat = c.idCat
+        AND p.idVeh = v.idVeh
+        AND i.idVeh IS NOT NULL
+        ORDER BY i.dtInterv ASC;
+    ");
+    $stmt->execute();
+    $res_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 
@@ -270,46 +295,38 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>14/10/2023 - 10:45</td>
-                                <td><strong>AA-123-BB</strong></td>
-                                <td><span class="badge badge--2">Classe 2</span></td>
-                                <td>1,500 CFA</td>
-                                <td>Gare Nord - G3</td>
-                                <td>Jean Dupont</td>
-                            </tr>
-                            <tr>
-                                <td>14/10/2023 - 10:42</td>
-                                <td><strong>CC-456-DD</strong></td>
-                                <td><span class="badge badge--4">Classe 4</span></td>
-                                <td>5,000 CFA</td>
-                                <td>Gare Sud - G1</td>
-                                <td>Marie Kone</td>
-                            </tr>
-                            <tr>
-                                <td>14/10/2023 - 10:38</td>
-                                <td><strong>EE-789-FF</strong></td>
-                                <td><span class="badge badge--1">Classe 1</span></td>
-                                <td>500 CFA</td>
-                                <td>Gare Nord - G2</td>
-                                <td>Alain Diallo</td>
-                            </tr>
-                            <tr>
-                                <td>14/10/2023 - 10:35</td>
-                                <td><strong>GG-012-HH</strong></td>
-                                <td><span class="badge badge--2">Classe 2</span></td>
-                                <td>1,500 CFA</td>
-                                <td>Gare Est - G4</td>
-                                <td>Sophie Yao</td>
-                            </tr>
-                            <tr>
-                                <td>14/10/2023 - 10:30</td>
-                                <td><strong>II-345-JJ</strong></td>
-                                <td><span class="badge badge--3">Classe 3</span></td>
-                                <td>3,000 CFA</td>
-                                <td>Gare Sud - G1</td>
-                                <td>Marie Kone</td>
-                            </tr>
+                            <?php
+                                // PHP code for fetching and displaying operation data would go here, but for now we will use static sample data
+                                $i = 0;
+                                foreach ($res_data as $key => $data) {
+                                    $nom = ucfirst(strtolower($data['nomAge']));
+                                    $prenom = ucfirst(strtolower($data['prenomAge']));
+
+                                    if ($data['mtPaie'] == 500){
+                                        $i = 1;
+                                    }
+                                    elseif ($data['mtPaie'] == 1000) {
+                                        $i = 2;
+                                    }
+                                    elseif ($data['mtPaie'] == 1500) {
+                                        $i = 3;
+                                    }
+                                    else {
+                                        $i = 4;
+                                    }
+                                    echo "
+                                        <tr>
+                                            <td>".$data['dtInterv']."</td>
+                                            <td><strong>".$data['immatVeh']."</strong></td>
+                                            <td><span class='badge badge--".$i."'>".substr($data['libCat'], 0, 8)."</span></td>
+                                            <td>".$data['mtPaie']."</td>
+                                            <td>".$data['libGui']."</td>
+                                            <td>".$nom.' '.$prenom."</td>
+                                        </tr>
+                                    ";
+                                }
+                                
+                            ?>
                         </tbody>
                     </table>
                 </div>

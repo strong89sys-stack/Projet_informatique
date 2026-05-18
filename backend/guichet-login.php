@@ -22,6 +22,9 @@
                 if ($res['statutAge'] == 1){
                     header("location:../frontend/guichet-login.html?error=connected");
                     exit();
+                }elseif ($res['idServ'] != 1){
+                    header("location:../frontend/guichet-login.html?error=service");
+                    exit();
                 }
 
                 $stmt = $conn->prepare("

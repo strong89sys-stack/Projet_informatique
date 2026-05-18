@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS marque(
 
 CREATE TABLE IF NOT EXISTS categorie(
 	idCat INTEGER PRIMARY KEY AUTO_INCREMENT,
-    libCat VARCHAR(15) NOT NULL,
+    libCat VARCHAR(30) NOT NULL,
     poidsMoyCat VARCHAR(30) NOT NULL
 ) ENGINE=INNODB;
 
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS intervention(
 
 CREATE TABLE IF NOT EXISTS nature_paiement(
 	idNatPaie INTEGER PRIMARY KEY AUTO_INCREMENT,
-    libNatPaie VARCHAR(10) NOT NULL
+    libNatPaie VARCHAR(20) NOT NULL
 ) ENGINE=INNODB;
 
 CREATE TABLE IF NOT EXISTS guichet(
@@ -136,3 +136,8 @@ INSERT INTO guichet (libGui, statutGui) VALUES
 ('Guichet A', 0),
 ('Guichet B', 0),
 ('Guichet C', 0);
+
+INSERT INTO nature_paiement (libNatPaie) VALUES
+('Espèces'),
+('Badge'),
+('Mobile money');
