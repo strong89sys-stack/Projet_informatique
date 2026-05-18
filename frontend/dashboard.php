@@ -16,8 +16,14 @@
         $interventionsCount = $stmt->fetchColumn();
     }
 
+    $dte = date('Y-m-d', time());
+
     /* Requête pour calculer les recettes totales */
-    $stmt = $conn->prepare("select sum(mtPaie) from paiement");
+    $stmt = $conn->prepare("select sum(mtPaie) 
+        from paiement
+        where dtPaie = :dte;
+    ");
+    $stmt->bindParam(':dte', $dte, PDO::PARAM_STR);
     $stmt->execute();
     $res_rec = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -27,7 +33,12 @@
     $activeAge = $stmt->fetch(PDO::FETCH_ASSOC);
 
     /* Requête pour compter les véhicules */
-    $stmt = $conn->prepare("select count(idVeh) from vehicule");
+    $stmt = $conn->prepare("select count(idVeh)
+        from intervention 
+        where idVeh IS NOT NULL
+        and dte = :dte;    
+    ");
+    $stmt->bindParam(':dte', $dte, PDO::PARAM_STR);
     $stmt->execute();
     $res_veh = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -53,6 +64,9 @@
     ");
     $stmt->execute();
     $res_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $_SESSION['res_data'] = $res_data;
+    $_SESSION['res_rec'] = $res_rec;
 ?>
 
 

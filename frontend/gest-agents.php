@@ -271,7 +271,7 @@
 
                     <!-- Pagination -->
                     <div class="pagination-bar">
-                        <span class="pagination-info">Affichage de 1 à 10 sur 142 agents</span>
+                        <span class="pagination-info">Affichage de 1 à 10 sur <?= count($res) ?> agents</span>
                         <div class="pagination-controls">
                             <button class="page-btn page-btn--arrow" disabled>
                                 <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>

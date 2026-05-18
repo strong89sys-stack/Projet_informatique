@@ -1,3 +1,34 @@
+<?php
+    session_start();
+    require '../backend/config.php';
+
+    /* Requête pour calculer les recettes totales */
+    $stmt = $conn->prepare("select sum(mtPaie) from paiement");
+    $stmt->execute();
+    $res_rec = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    /* Requête pour compter les véhicules */
+    $stmt = $conn->prepare("select count(idVeh) from vehicule");
+    $stmt->execute();
+    $res_veh = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    /* Requête pour récupérer l'immatriculation du véhicule dans les interventions récentes */
+    $stmt = $conn->prepare("SELECT p.idPaie, i.dtInterv, g.libGui, np.libNatPaie, c.libCat, p.mtPaie
+        FROM intervention as i, vehicule as v, guichet as g, agent as a, categorie as c, paiement as p, nature_paiement as np
+        WHERE i.idVeh = v.idVeh
+        AND i.idGui = g.idGui
+        AND i.idAge = a.idAge
+        AND v.idCat = c.idCat
+        AND p.idVeh = v.idVeh
+        AND p.idNatPaie = np.idNatPaie
+        AND i.idVeh IS NOT NULL
+        ORDER BY i.dtInterv ASC;
+    ");
+    $stmt->execute();
+    $res_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -92,7 +123,7 @@
             <div class="kpi-grid">
                 <div class="kpi-card">
                     <span class="kpi-label">Total Collecté</span>
-                    <div class="kpi-value">145 280 000 </div>
+                    <div class="kpi-value"><?= implode($res_rec)  ?> </div>
                     <div class="kpi-trend up">↗ +12.5%</div>
                 </div>
                 <div class="kpi-card">
@@ -101,13 +132,13 @@
                     <div class="kpi-info">Moyenne : 17 000</div>
                 </div>
                 <div class="kpi-card">
-                    <span class="kpi-label">Paiements Tag</span>
+                    <span class="kpi-label">Paiements Badge</span>
                     <div class="kpi-value blue">62%</div>
                     <div class="kpi-info">Méthode dominante</div>
                 </div>
                 <div class="kpi-card">
                     <span class="kpi-label">Taux d'erreur</span>
-                    <div class="kpi-value red">0.04%</div>
+                    <div class="kpi-value red">0.00%</div>
                     <div class="kpi-info red">Sous le seuil critique</div>
                 </div>
             </div>
@@ -169,7 +200,43 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="txn-body"></tbody>
+                    <tbody id="txn-body">
+                        <?php
+                            // PHP code for fetching and displaying operation data would go here, but for now we will use static sample data
+                            $i = 0;
+                            foreach ($res_data as $key => $data) {
+
+                                if ($data['mtPaie'] == 500){
+                                    $i = 1;
+                                }
+                                elseif ($data['mtPaie'] == 1000) {
+                                    $i = 2;
+                                }
+                                elseif ($data['mtPaie'] == 1500) {
+                                    $i = 3;
+                                }
+                                else {
+                                    $i = 4;
+                                }
+                                echo "
+                                    <tr>
+                                        <td>".md5($data['idPaie'])."</td>
+                                        <td>".$data['dtInterv']."</td>
+                                        <td>".$data['libGui']."</td>
+                                        <td>".$data['libNatPaie']."</td>
+                                        <td><span class='badge badge--".$i."'>".substr($data['libCat'], 0, 8)."</span></td>
+                                        <td>".$data['mtPaie']."</td>
+                                        <td><span class='badge-ok'>VALIDÉ</span></td>
+                                        <td>
+                                            <button class='action-btn' title='Voir'>
+                                                <svg viewBox='0 0 24 24'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/><circle cx='12' cy='12' r='3'/></svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ";
+                            }    
+                        ?>
+                    </tbody>
                 </table>
                 <div class="pagination-bar">
                     <span class="pagination-info" id="pag-info">Affichage de 1–5 sur 5 transactions</span>
@@ -188,7 +255,7 @@
 </div>
 
 <script>
-const transactions = [
+/*const transactions = [
     { id: '#TXN-88219', date: '24/10/2026', heure: '14:32:01', gare: 'Guichet A', voie: 'Voie 03', methode: 'badge',     categorie: 'Classe 1 (VL)',   montant: '500', statut: 'validé' },
     { id: '#TXN-88218', date: '24/10/2026', heure: '14:28:45', gare: 'Guichet B', voie: 'Voie 05', methode: 'badge',   categorie: 'Classe 3 (PL)',   montant: '1500', statut: 'validé' },
     { id: '#TXN-88217', date: '24/10/2026', heure: '14:15:10', gare: 'Guichet C',  voie: 'Voie 12', methode: 'Espèces', categorie: 'Classe 1 (VL)',   montant: '500',  statut: 'echec' },
@@ -248,7 +315,7 @@ document.getElementById('f-methode').addEventListener('change', filterTable);
 document.getElementById('f-cat').addEventListener('change', filterTable);
 document.getElementById('f-statut').addEventListener('change', filterTable);
 
-renderTable(transactions);
+renderTable(transactions);*/
 </script>
 </body>
 </html>
