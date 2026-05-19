@@ -24,9 +24,7 @@
                 Gestion du Péage - Agent
             </div>
             <div class="right">
-                <button type="submit" name="disconnected"><span>&LeftArrow;</span> Se déconnecter</button>
-                <button><img src="assets/icon/notification.png" alt="notifs-icon"></button>
-                <button><img src="assets/icon/profile.png" alt="profil-icon"></button>
+                <a href="index.html"><span>&LeftArrow;</span> Retourner à l'accueil</a>
             </div>
     </header>
 

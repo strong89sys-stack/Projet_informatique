@@ -12,6 +12,25 @@
     $stmt->execute();
     $res_veh = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    /* */
+    $stmt = $conn->prepare("select count(idVeh) as totalInterv
+        from intervention
+        where idVeh is not null;
+    ");
+    $stmt->execute();
+    $res_interv = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    /* */
+    $stmt = $conn->prepare("select count(dte) as totalDte
+        from intervention
+        where idVeh is not null;
+    ");
+    $stmt->execute();
+    $res_dte = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($res_dte){
+        $moyenne_interv = $res_interv['totalInterv'] / $res_dte['totalDte'];
+    }
+
     /* Requête pour récupérer l'immatriculation du véhicule dans les interventions récentes */
     $stmt = $conn->prepare("SELECT p.idPaie, i.dtInterv, g.libGui, np.libNatPaie, c.libCat, p.mtPaie
         FROM intervention as i, vehicule as v, guichet as g, agent as a, categorie as c, paiement as p, nature_paiement as np
@@ -128,8 +147,8 @@
                 </div>
                 <div class="kpi-card">
                     <span class="kpi-label">Transactions</span>
-                    <div class="kpi-value">8 432</div>
-                    <div class="kpi-info">Moyenne : 17 000</div>
+                    <div class="kpi-value"><?= implode($res_interv) ?></div>
+                    <div class="kpi-info">Moyenne : <?= $moyenne_interv ?></div>
                 </div>
                 <div class="kpi-card">
                     <span class="kpi-label">Paiements Badge</span>
@@ -226,7 +245,7 @@
                                         <td>".$data['libNatPaie']."</td>
                                         <td><span class='badge badge--".$i."'>".substr($data['libCat'], 0, 8)."</span></td>
                                         <td>".$data['mtPaie']."</td>
-                                        <td><span class='badge-ok'>VALIDÉ</span></td>
+                                        <td><span class='badge-ok' style='font-weight: 700; padding: 5px; border-radius: 10px;'>Validé</span></td>
                                         <td>
                                             <button class='action-btn' title='Voir'>
                                                 <svg viewBox='0 0 24 24'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/><circle cx='12' cy='12' r='3'/></svg>

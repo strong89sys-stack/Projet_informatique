@@ -19,9 +19,12 @@
     $dte = date('Y-m-d', time());
 
     /* Requête pour calculer les recettes totales */
-    $stmt = $conn->prepare("select sum(mtPaie) 
-        from paiement
-        where dtPaie = :dte;
+    $stmt = $conn->prepare("select sum(mtPaie)
+        from paiement as p, intervention as i, vehicule as v
+        where i.idVeh = v.idVeh
+        and p.idVeh = v.idVeh
+        and i.idVeh IS NOT NULL
+        and i.dte = :dte;
     ");
     $stmt->bindParam(':dte', $dte, PDO::PARAM_STR);
     $stmt->execute();

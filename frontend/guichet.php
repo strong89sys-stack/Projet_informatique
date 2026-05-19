@@ -125,7 +125,9 @@
                     }
                 }
             }
-        }
+        }    
+        header("Refresh:0");
+        exit();
     }
 
     if(@$_GET['disconnected'] == true){
@@ -142,7 +144,7 @@
         $stmt->execute();
 
         session_destroy();
-        header("location:guichet-login.html");
+        header("location:guichet-login.php");
         exit();
     }
 ?>

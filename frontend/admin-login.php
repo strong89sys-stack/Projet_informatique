@@ -4,11 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACCUEIL_PHKB</title>
+    <link rel="stylesheet" href="styles/guichet.css">
     <link rel="stylesheet" href="styles/form.css">
+    <link rel="stylesheet" href="styles/form1.css">
 </head>
 <body>
+
+    <header class="header" style="width: 100vw; position: absolute; top: 0;">
+            <div class="left">
+                Gestion du Péage - Admin
+            </div>
+            <div class="right">
+                <a href="index.html"><span>&LeftArrow;</span> Retourner à l'accueil</a>
+            </div>
+    </header>
+
     <div class="container">
-        <div>
+        <div style="text-align: center;">
             <h2>AUTHENTIFICATION</h2>
             <P>Connectez-vous à votre App de Gestion</P>
         </div>

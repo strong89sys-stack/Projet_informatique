@@ -1,5 +1,4 @@
 const admin_btn = document.getElementById("admin-btn")
-const agent_btn = document.getElementById("agent-btn")
 const guichet_btn = document.getElementById("guichet-btn")
 
 
@@ -7,12 +6,8 @@ admin_btn.addEventListener('click', () => {
     window.location.href = "../frontend/admin-login.php"
 })
 
-agent_btn.addEventListener('click', () =>{
-    window.location.href = "../frontend/agent.php"
-})
-
 guichet_btn.addEventListener('click', () =>{
-    window.location.href = "../frontend/guichet-login.php"
+    window.open("../frontend/guichet-login.php", "_blank")
 })
 
 /*const cat1 = document.getElementById('Cat_1')

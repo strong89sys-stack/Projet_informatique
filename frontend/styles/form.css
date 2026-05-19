@@ -53,3 +53,34 @@ select{
     font-weight: bold;
     border: none;
 }
+.input:hover{
+    transform: translateY(2px);
+    background-color: rgb(23, 23, 100);
+    color: #fff;
+    transition: ease-out 300ms;
+}
+
+/* -------------------------- Header styles ---------------------------- */
+
+.header .right a{
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgb(0, 93, 172);
+    font-weight: bold;
+    border: 1px solid;
+    padding: 10px;
+    border-radius: 8px;
+}
+.header .right span{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.header .right a:hover{
+    transform: translateY(3px);
+    background-color: rgba(0, 0, 0, .4);
+    color: #fff;
+    transition: ease-out 300ms;
+}

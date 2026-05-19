@@ -43,11 +43,11 @@
                 $stmt->bindParam(':idServ', $idServ, PDO::PARAM_INT);
 
                 if($stmt->execute()){
-                    header("location:../frontend/dashboard.html?result=success");
+                    header("location:../frontend/gest-agents.php?result=success");
                     exit();
                 }
                 else{
-                    header("location:../frontend/agent.html?result=error");
+                    header("location:../frontend/agent.php?result=error");
                     exit();
                 }
             }

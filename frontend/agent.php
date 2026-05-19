@@ -14,18 +14,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACCUEIL_PHKB</title>
     <link rel="stylesheet" href="styles/guichet.css">
+    <link rel="stylesheet" href="styles/form.css">
     <link rel="stylesheet" href="styles/form1.css">
 </head>
-<body>
+<body style="width: 100vw;">
 
-    <header class="header">
-            <div class="left">
-                Gestion du Péage - Admin
+    <header class="header" style="margin-bottom: 20rem;">
+            <div class="left" style="margin-left: 10px;">
+                Gestion du Péage - Création d'un agent
             </div>
             <div class="right">
-                <button type="submit" name="disconnected" class="disconnected"><span>&LeftArrow;</span> Rétourner au Dashboard</button>
-                <button><img src="assets/icon/notification.png" alt="notifs-icon"></button>
-                <button><img src="assets/icon/profile.png" alt="profil-icon"></button>
+                <a href="dashboard.php" class="disconnected"><span>&LeftArrow;</span> Rétourner au Dashboard</a>
             </div>
     </header>
 
