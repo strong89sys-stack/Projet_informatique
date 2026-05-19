@@ -9,6 +9,7 @@
     $payment_mode = $_POST['payment-mode'] ?? null;
     $txt_arrea = $_POST['message'] ?? null;
     $valider = $_POST['valider'] ?? null;
+    $imprimer = $_POST['imprimer'] ?? null;
 
     $message = null;
     $amount = null;
@@ -50,6 +51,10 @@
             } elseif ($category === 'Classe 4 (Poids lourds 3+ essieux)') {
                 $amount = 3000;
             }
+
+            $_SESSION['immat'] = $immat;
+            $_SESSION['marque'] = $marque;
+            $_SESSION['amount'] = $amount;
 
             $stmt = $conn->prepare("SELECT * FROM marque WHERE libMarq = :marque LIMIT 1");
             $stmt->bindParam(':marque', $marque, PDO::PARAM_STR);
@@ -115,6 +120,9 @@
 
                                 if ($stmt->execute()) {
                                     $message = 'Encaissement enregistré avec succès.';
+                                    sleep(3);
+                                    header("location:guichet.php?imprimer=true");
+                                    exit();
                                 } else {
                                     $message = 'Impossible d\'enregistrer l\'intervention.';
                                 }
@@ -129,6 +137,12 @@
         header("Refresh:0");
         exit();
     }
+
+    /*if (isset($imprimer)) {
+        // Logique d'impression du reçu
+        header("location:guichet.php?imprimer=true");
+        exit();
+    }*/
 
     if(@$_GET['disconnected'] == true){
         $stmt = $conn->prepare("UPDATE agent
@@ -297,11 +311,11 @@
                             <button type="submit" class="first wide" name="valider">
                                 <span data-icon="check">&check;</span> Valider l’encaissement
                             </button>
-                            <button type="button" class="second wide" name="imprimer">
+                            <button type="button" class="second wide" id="print-btn">
                                 <img src="./assets/icon/printer.png" alt="printer-icon" height="16px">
                                 Imprimer reçu
                             </button>
-                            <button type="reset" class="last short" name="annuler">
+                            <button type="reset" class="last short" id="reset_btn">
                                 <img src="./assets/icon/close.png" alt="close-icon" height="16px"> Annuler
                             </button>
                         </div>
@@ -392,6 +406,25 @@
         disconnected.addEventListener('click', () => {
             if (confirm("Êtes-vous sûr de vouloir vous déconnecter ?")) {
                 window.location.href = "guichet.php?disconnected=true";
+            }
+        });
+    </script>
+    <script>
+        const printBtn = document.getElementById('print-btn');
+        printBtn.addEventListener('click', () => {
+            window.location.reload();
+        });
+        if (window.location.search.includes('imprimer=true')) {
+            window.onload = () => {
+                window.open('./printPage/reçu.php', '_blank');
+            };
+        }
+    </script>
+    <script>
+        const resetBtn = document.getElementById('reset_btn');
+        resetBtn.addEventListener('click', () => {
+            if (confirm("Êtes-vous sûr de vouloir annuler cette opération ?")) {
+                window.location.href = "guichet.php";
             }
         });
     </script>
